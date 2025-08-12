@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserMapper">
+    <resultMap id="resultMap" type="com.example.entity.User">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="sex" property="sex"></result>
+    </resultMap>
+
+
+    <select id="getall" resultType="com.example.entity.User">
+        select *
+        from my_db.t_demo1;
+    </select>
+
+    <insert id="addUser">
+        INSERT INTO my_db.t_demo1
+            (id, "name", sex)
+        VALUES(33, 'liuyubin', 'male');
+    </insert>
+
+</mapper>
