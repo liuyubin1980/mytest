@@ -46,35 +46,37 @@ def getsysbak(name_in,hostname_in,username_in,password_in,datalink_in,datestr_in
     datestr = datestr_in
     datalink = datalink_in
 
+    #mytest 2025-8-12 20:12:48
+
     # sftp.put(localpath=filename_o,remotepath='/home/gaussdba/002.csv')
     # sftp.put(localpath=filename_sql,remotepath='/home/gaussdba/002.sql')
 
-    paramiko.util.log_to_file('syslogin.log') #å‘é€paramikoæ—¥å¿—åˆ°sy sLogi n.Logæ–‡ä»¶
-    ssh = paramiko.SSHClient() #åˆ›å»ºä¸€ä¸ªSSHå®¢æˆ·ç«¯cLientå¯¹è±¡
-    ssh.load_system_host_keys() #è·å–å®¢æˆ·ç«¯host_keys,é»˜è®¤~/.ssh/known_hosts,éé»˜è®¤è·¯å¾„éœ€
+    paramiko.util.log_to_file('syslogin.log') #·¢ËÍparamikoÈÕÖ¾µ½sy sLogi n.LogÎÄ¼ş
+    ssh = paramiko.SSHClient() #´´½¨Ò»¸öSSH¿Í»§¶ËcLient¶ÔÏó
+    ssh.load_system_host_keys() #»ñÈ¡¿Í»§¶Ëhost_keys,Ä¬ÈÏ~/.ssh/known_hosts,·ÇÄ¬ÈÏÂ·¾¶Ğè
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-    ssh.connect(hostname=hostname,username=username,password=password) #åˆ›å»ºSSHè¿æ¥
-    stdin,stdout,stderr = ssh.exec_command('rm -r -f /opt/databasebak/*') #è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
-    # stdin,stdout,stderr = ssh.exec_command('zsql gaussproject/gaussdba_123@127.0.0.1:1888 -q ; y;BACKUP DATABASE FULL FORMAT /opt/databasebak/20250726 AS COMPRESSED BACKUPSET;') #è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
+    ssh.connect(hostname=hostname,username=username,password=password) #´´½¨SSHÁ¬½Ó
+    stdin,stdout,stderr = ssh.exec_command('rm -r -f /opt/databasebak/*') #µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
+    # stdin,stdout,stderr = ssh.exec_command('zsql gaussproject/gaussdba_123@127.0.0.1:1888 -q ; y;BACKUP DATABASE FULL FORMAT /opt/databasebak/20250726 AS COMPRESSED BACKUPSET;') #µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
     rst = stdout.read().decode( 'utf-8' )
     log.info(rst)
 
-    stdin,stdout,stderr = ssh.exec_command('true > /opt/databasebak/003.sql;echo "BACKUP DATABASE FULL FORMAT \'/opt/databasebak/'+datestr+'\'AS COMPRESSED BACKUPSET;"  >> /opt/databasebak/003.sql') #è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
-    # stdin,stdout,stderr = ssh.exec_command('zsql gaussproject/gaussdba_123@127.0.0.1:1888 -q ; y;BACKUP DATABASE FULL FORMAT /opt/databasebak/20250726 AS COMPRESSED BACKUPSET;') #è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
+    stdin,stdout,stderr = ssh.exec_command('true > /opt/databasebak/003.sql;echo "BACKUP DATABASE FULL FORMAT \'/opt/databasebak/'+datestr+'\'AS COMPRESSED BACKUPSET;"  >> /opt/databasebak/003.sql') #µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
+    # stdin,stdout,stderr = ssh.exec_command('zsql gaussproject/gaussdba_123@127.0.0.1:1888 -q ; y;BACKUP DATABASE FULL FORMAT /opt/databasebak/20250726 AS COMPRESSED BACKUPSET;') #µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
     rst = stdout.read().decode( 'utf-8' )
     log.info(rst)
 
-    stdin,stdout,stderr = ssh.exec_command(datalink+' -q -f "/opt/databasebak/003.sql"') #è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
-    # stdin,stdout,stderr = ssh.exec_command('zsql gaussproject/gaussdba_123@127.0.0.1:1888 -q ; y;BACKUP DATABASE FULL FORMAT /opt/databasebak/20250726 AS COMPRESSED BACKUPSET;') #è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
+    stdin,stdout,stderr = ssh.exec_command(datalink+' -q -f "/opt/databasebak/003.sql"') #µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
+    # stdin,stdout,stderr = ssh.exec_command('zsql gaussproject/gaussdba_123@127.0.0.1:1888 -q ; y;BACKUP DATABASE FULL FORMAT /opt/databasebak/20250726 AS COMPRESSED BACKUPSET;') #µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
     rst = stdout.read().decode( 'utf-8' )
     log.info(rst)
 
-    stdin,stdout,stderr = ssh.exec_command('cd /opt/databasebak;tar -czvf '+datestr+'.tar.gz '+datestr) #è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
+    stdin,stdout,stderr = ssh.exec_command('cd /opt/databasebak;tar -czvf '+datestr+'.tar.gz '+datestr) #µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
     rst = stdout.read().decode( 'utf-8' )
     log.info(rst)
 
 
-    #ä¸‹è½½æ–‡ä»¶
+    #ÏÂÔØÎÄ¼ş
     client = paramiko.Transport((hostname,22))
     client.connect(username=username,password=password)
     sftp = paramiko.SFTPClient.from_transport(client)
@@ -100,18 +102,18 @@ def getsysbak_V5(name_in,hostname_in,username_in,password_in,datalink_in,datestr
     password = password_in
     datestr = datestr_in
     datalink = datalink_in
-    paramiko.util.log_to_file('syslogin.log')  # å‘é€paramikoæ—¥å¿—åˆ°sy sLogi n.Logæ–‡ä»¶
-    ssh = paramiko.SSHClient()  # åˆ›å»ºä¸€ä¸ªSSHå®¢æˆ·ç«¯cLientå¯¹è±¡
-    ssh.load_system_host_keys()  # è·å–å®¢æˆ·ç«¯host_keys,é»˜è®¤~/.ssh/known_hosts,éé»˜è®¤è·¯å¾„éœ€
+    paramiko.util.log_to_file('syslogin.log')  # ·¢ËÍparamikoÈÕÖ¾µ½sy sLogi n.LogÎÄ¼ş
+    ssh = paramiko.SSHClient()  # ´´½¨Ò»¸öSSH¿Í»§¶ËcLient¶ÔÏó
+    ssh.load_system_host_keys()  # »ñÈ¡¿Í»§¶Ëhost_keys,Ä¬ÈÏ~/.ssh/known_hosts,·ÇÄ¬ÈÏÂ·¾¶Ğè
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-    ssh.connect(hostname=hostname, username=username, password=password)  # åˆ›å»ºSSHè¿æ¥
-    stdin, stdout, stderr = ssh.exec_command('rm -r -f /opt/databasebak/*')  # è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
+    ssh.connect(hostname=hostname, username=username, password=password)  # ´´½¨SSHÁ¬½Ó
+    stdin, stdout, stderr = ssh.exec_command('rm -r -f /opt/databasebak/*')  # µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
     rst = stdout.read().decode('utf-8')
 
-    stdin, stdout, stderr = ssh.exec_command(datalink)  # è°ƒç”¨è¿œç¨‹æ‰§è¡Œå‘½ä»¤æ–¹æ³•exec_command()
+    stdin, stdout, stderr = ssh.exec_command(datalink)  # µ÷ÓÃÔ¶³ÌÖ´ĞĞÃüÁî·½·¨exec_command()
     rst = stdout.read().decode('utf-8')
 
-    # # ä¸‹è½½æ–‡ä»¶
+    # # ÏÂÔØÎÄ¼ş
     client = paramiko.Transport((hostname, 22))
     client.connect(username=username, password=password)
     sftp = paramiko.SFTPClient.from_transport(client)
@@ -151,9 +153,9 @@ for row in df.itertuples():
         onebox = OneBox(file_path)
         result = onebox.upload_file()
         if result is True:
-            log.info("ä¸Šä¼ æˆåŠŸï¼"+file_path)
+            log.info("ÉÏ´«³É¹¦£¡"+file_path)
         else:
-            log.info("ä¸Šä¼ å¤±è´¥ï¼"+file_path)
+            log.info("ÉÏ´«Ê§°Ü£¡"+file_path)
     except Exception as e:
         log.info(name +" fail.")
         log.info(e)
